@@ -10,7 +10,13 @@ from copy import copy
 from openpyxl import Workbook
 
 def get_chapter_html():
-    #get raw html repsonse
+    """
+    Get raw html repsonse for every chapter.
+
+    ### Returns
+
+    list of html text
+    """
     chapter_html = []
     for i in range(1, s.chapters + 1):
 
@@ -25,8 +31,9 @@ def get_chapter_html():
     return chapter_html
 
 def convert_to_dict(chapter_html):
-
-    #convert html to a dictionary
+    """
+    Convert html to a dictionary.
+    """
     ch_dict = {}
     for i, ch in enumerate(chapter_html):
         soup = BeautifulSoup(ch, 'html.parser')
@@ -51,6 +58,10 @@ def convert_to_dict(chapter_html):
     return ch_dict
 
 def main():
+    """
+    Scrapes a website that has the English and Greek translations of the gospel of john.
+    Saves the result into an excel file.
+    """
     
     chapter_html = get_chapter_html()
 
@@ -60,6 +71,7 @@ def main():
         chapter_html=chapter_html
     )
 
+    #Construct a list suitable for inserting into an excel spreadsheet.
     chapters = []
     for ch in ch_dict:
         lines = []
@@ -122,8 +134,12 @@ def main():
                 sh.cell(row_count, i+1, w)
             row_count += 2
         
-    wb.remove_sheet('Sheet')
+    try:
+        wb.remove_sheet('Sheet')
+    except:
+        pass
     wb.save('Gospel of John.xlsx')
+    wb.close()
 
 if __name__ == '__main__':
     main()
